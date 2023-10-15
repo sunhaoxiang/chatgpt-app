@@ -1,5 +1,5 @@
 module.exports = {
-  plugins: ['prettier', 'import', 'unused-imports', 'unused-imports'],
+  plugins: ['prettier', 'unused-imports'],
   extends: ['next/core-web-vitals', 'prettier', 'plugin:prettier/recommended'],
   rules: {
     /* ********************************** ES6+ ********************************** */
@@ -12,9 +12,6 @@ module.exports = {
     'no-unused-vars': 0,
     'no-multi-assign': 0,
     'no-param-reassign': [2, { props: false }],
-    'import/prefer-default-export': 0,
-    'import/no-cycle': 0,
-    'import/no-dynamic-require': 0,
     'max-classes-per-file': 0,
     'class-methods-use-this': 0,
     'guard-for-in': 0,
