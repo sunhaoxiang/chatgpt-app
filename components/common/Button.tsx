@@ -6,7 +6,10 @@ export default function Button({
   ...props
 }: ComponentPropsWithoutRef<'button'>) {
   return (
-    <button className={`rounded border border-gray-600 px-3 py-1.5 ${className}`} {...props}>
+    <button
+      className={`hover: rounded border border-gray-600 px-3 py-1.5 hover:bg-gray-800 active:bg-gray-700 ${className}`}
+      {...props}
+    >
       {children}
     </button>
   )
