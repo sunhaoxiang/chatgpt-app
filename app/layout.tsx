@@ -1,3 +1,4 @@
+import AppContextProvider from '@/components/AppContext'
 import type { Metadata } from 'next'
 import { ReactNode } from 'react'
 
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className="dark">{children}</body>
+      <body className="dark">
+        <AppContextProvider>{children}</AppContextProvider>
+      </body>
     </html>
   )
 }
