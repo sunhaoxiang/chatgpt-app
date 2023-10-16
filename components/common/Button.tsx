@@ -1,15 +1,32 @@
 import type { ComponentPropsWithoutRef } from 'react'
+import type { IconType } from 'react-icons'
+
+type ButtonType = {
+  icon?: IconType
+  variant?: 'default' | 'outline' | 'text'
+} & ComponentPropsWithoutRef<'button'>
 
 export default function Button({
   children,
-  className,
+  className = '',
+  icon: Icon,
+  variant = 'default',
   ...props
-}: ComponentPropsWithoutRef<'button'>) {
+}: ButtonType) {
   return (
     <button
-      className={`hover: rounded border border-gray-600 px-3 py-1.5 hover:bg-gray-800 active:bg-gray-700 ${className}`}
+      className={`inline-flex min-h-[38px] min-w-[38px] items-center rounded px-3 py-1.5
+        ${
+          variant === 'default'
+            ? 'dark:hover:bg-gray-90 bg-gray-50 text-black hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300'
+            : variant === 'outline'
+            ? 'border border-gray-300 bg-gray-50 text-black hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+            : 'bg-transparent text-black hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700'
+        }
+        ${className}`}
       {...props}
     >
+      {Icon && <Icon className={`text-lg ${children ? 'mr-1' : ''}`} />}
       {children}
     </button>
   )
