@@ -4,11 +4,12 @@ import { LuPanelLeft } from 'react-icons/lu'
 
 import { useAppContext } from '@/components/AppContext'
 import Button from '@/components/common/Button'
+import { ActionType } from '@/reducers/AppReducer'
 
 export default function Menu() {
   const {
     state: { displayNavigation },
-    setState
+    dispatch
   } = useAppContext()
 
   return (
@@ -17,7 +18,11 @@ export default function Menu() {
       className={`${displayNavigation ? 'hidden' : ''} fixed left-2 top-2`}
       variant="outline"
       onClick={() => {
-        setState(v => ({ ...v, displayNavigation: true }))
+        dispatch({
+          type: ActionType.UPDATE,
+          field: 'displayNavigation',
+          value: true
+        })
       }}
     />
   )

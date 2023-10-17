@@ -2,11 +2,12 @@ import { MdDarkMode, MdInfo, MdLightMode } from 'react-icons/md'
 
 import { useAppContext } from '@/components/AppContext'
 import Button from '@/components/common/Button'
+import { ActionType } from '@/reducers/AppReducer'
 
 export default function Index() {
   const {
     state: { themeMode },
-    setState
+    dispatch
   } = useAppContext()
 
   return (
@@ -15,11 +16,10 @@ export default function Index() {
         icon={themeMode === 'dark' ? MdDarkMode : MdLightMode}
         variant="text"
         onClick={() => {
-          setState(v => {
-            return {
-              ...v,
-              themeMode: v.themeMode === 'dark' ? 'light' : 'dark'
-            }
+          dispatch({
+            type: ActionType.UPDATE,
+            field: 'themeMode',
+            value: themeMode === 'dark' ? 'light' : 'dark'
           })
         }}
       />
