@@ -1,6 +1,7 @@
-import AppContextProvider from '@/components/AppContext'
 import type { Metadata } from 'next'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
+
+import AppContextProvider from '@/components/AppContext'
 
 import './globals.css'
 

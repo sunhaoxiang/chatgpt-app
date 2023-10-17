@@ -1,7 +1,7 @@
 'use client'
 
-import { createContext, useContext, useMemo, useState } from 'react'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
+import { createContext, useContext, useMemo, useState } from 'react'
 
 type State = {
   displayNavigation: boolean

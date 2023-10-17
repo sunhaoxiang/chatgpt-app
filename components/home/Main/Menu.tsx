@@ -1,8 +1,9 @@
 'use client'
 
+import { LuPanelLeft } from 'react-icons/lu'
+
 import { useAppContext } from '@/components/AppContext'
 import Button from '@/components/common/Button'
-import { LuPanelLeft } from 'react-icons/lu'
 
 export default function Menu() {
   const {

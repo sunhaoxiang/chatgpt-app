@@ -1,7 +1,8 @@
-import { useAppContext } from '@/components/AppContext'
-import Button from '@/components/common/Button'
 import { HiPlus } from 'react-icons/hi'
 import { LuPanelLeft } from 'react-icons/lu'
+
+import { useAppContext } from '@/components/AppContext'
+import Button from '@/components/common/Button'
 
 export default function Index() {
   const { setState } = useAppContext()
