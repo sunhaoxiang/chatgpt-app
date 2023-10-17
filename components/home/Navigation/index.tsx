@@ -1,7 +1,9 @@
 'use client'
 
 import { useAppContext } from '@/components/AppContext'
-import Menubar from '@/components/home/Navigation/Menubar'
+
+import Menubar from './Menubar'
+import Toolbar from './Toolbar'
 
 export default function Index() {
   const {
@@ -11,9 +13,10 @@ export default function Index() {
     <nav
       className={`${
         displayNavigation ? '' : 'hidden'
-      } h-full w-[260px] bg-gray-900 p-2 text-gray-300`}
+      } dark relative h-full w-[260px] bg-gray-900 p-2 text-gray-300`}
     >
       <Menubar />
+      <Toolbar />
     </nav>
   )
 }

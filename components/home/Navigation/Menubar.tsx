@@ -16,7 +16,12 @@ export default function Index() {
         icon={LuPanelLeft}
         variant="outline"
         onClick={() => {
-          setState(v => ({ ...v, displayNavigation: false }))
+          setState(v => {
+            return {
+              ...v,
+              displayNavigation: false
+            }
+          })
         }}
       />
     </div>
