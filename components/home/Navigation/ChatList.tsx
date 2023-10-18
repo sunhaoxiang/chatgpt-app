@@ -1,17 +1,21 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { AiOutlineEdit } from 'react-icons/ai'
+import { MdCheck, MdClose, MdDeleteOutline } from 'react-icons/md'
+import { PiChatBold, PiTrashBold } from 'react-icons/pi'
 
+import { groupByDate } from '@/common/util'
 import { Chat } from '@/types/chat'
 
 export default function ChatList() {
   const [chatList, setChatList] = useState<Chat[]>([
     {
       id: '1',
-      title: 'React入门实战教程',
+      title: 'React',
       updateTime: Date.now()
     },
     {
       id: '2',
-      title: '如何使用Next.js创建React项目',
+      title: '如何使用Next.js创建React项目123123123',
       updateTime: Date.now() - 1000 * 60 * 60 * 24 * 2
     },
     {
@@ -77,9 +81,76 @@ export default function ChatList() {
     {
       id: '15',
       title: '如何使用Next.js创建React项目',
+      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 2
+    },
+    {
+      id: '16',
+      title: '如何使用Next.js创建React项目',
+      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 2
+    },
+    {
+      id: '17',
+      title: '如何使用Next.js创建React项目',
+      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 2
+    },
+    {
+      id: '18',
+      title: 'Next.js',
+      updateTime: Date.now() + 2
+    },
+    {
+      id: '19',
+      title: 'Next.js',
+      updateTime: Date.now() + 2
+    },
+    {
+      id: '20',
+      title: 'Next.js',
       updateTime: Date.now() + 2
     }
   ])
 
-  return <div className="mt-2 flex flex-1 flex-col"></div>
+  const [selectedChat, setSelectedChat] = useState<Chat>()
+
+  const groupList = useMemo(() => {
+    return groupByDate(chatList)
+  }, [chatList])
+  return (
+    <div className="mb-[48px] mt-2 flex flex-1 flex-col overflow-y-auto">
+      {groupList.map(([date, list]) => {
+        return (
+          <div key={date}>
+            <div className="sticky top-0 z-10 bg-gray-900 p-3 text-sm text-gray-500">{date}</div>
+            <ul>
+              {list.map(item => {
+                const selected = selectedChat?.id === item.id
+
+                return (
+                  <li
+                    key={item.id}
+                    className={`group flex cursor-pointer items-center space-x-3 rounded-md p-3 hover:bg-gray-800 ${
+                      selected ? 'bg-gray-800' : ''
+                    }`}
+                    onClick={() => setSelectedChat(item)}
+                  >
+                    <div>
+                      <PiChatBold />
+                    </div>
+                    <div className="relative flex-1 overflow-hidden whitespace-nowrap">
+                      {item.title}
+                      <span
+                        className={`absolute inset-y-0 right-0 w-8 bg-gradient-to-l group-hover:from-gray-800 ${
+                          selected ? 'from-gray-800' : 'from-gray-900'
+                        }`}
+                      ></span>
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        )
+      })}
+    </div>
+  )
 }
