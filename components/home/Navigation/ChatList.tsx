@@ -1,10 +1,9 @@
 import { useMemo, useState } from 'react'
-import { AiOutlineEdit } from 'react-icons/ai'
-import { MdCheck, MdClose, MdDeleteOutline } from 'react-icons/md'
-import { PiChatBold, PiTrashBold } from 'react-icons/pi'
 
 import { groupByDate } from '@/common/util'
 import { Chat } from '@/types/chat'
+
+import ChatItem from './ChatItem'
 
 export default function ChatList() {
   const [chatList, setChatList] = useState<Chat[]>([
@@ -126,25 +125,12 @@ export default function ChatList() {
                 const selected = selectedChat?.id === item.id
 
                 return (
-                  <li
+                  <ChatItem
                     key={item.id}
-                    className={`group flex cursor-pointer items-center space-x-3 rounded-md p-3 hover:bg-gray-800 ${
-                      selected ? 'bg-gray-800' : ''
-                    }`}
-                    onClick={() => setSelectedChat(item)}
-                  >
-                    <div>
-                      <PiChatBold />
-                    </div>
-                    <div className="relative flex-1 overflow-hidden whitespace-nowrap">
-                      {item.title}
-                      <span
-                        className={`absolute inset-y-0 right-0 w-8 bg-gradient-to-l group-hover:from-gray-800 ${
-                          selected ? 'from-gray-800' : 'from-gray-900'
-                        }`}
-                      ></span>
-                    </div>
-                  </li>
+                    item={item}
+                    selected={selected}
+                    onSelected={chat => setSelectedChat(chat)}
+                  />
                 )
               })}
             </ul>
