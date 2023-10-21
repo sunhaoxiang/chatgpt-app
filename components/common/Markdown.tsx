@@ -9,16 +9,12 @@ function Markdown({ children, className = '', ...props }: Options) {
     <ReactMarkdown
       components={{
         code(props) {
-          const { children, className, node, ...rest } = props
+          const { children, className, node, ref, ...rest } = props
           const match = /language-(\w+)/.exec(className || '')
           return match ? (
-            <SyntaxHighlighter
-              {...rest}
-              children={String(children).replace(/\n$/, '')}
-              style={a11yDark}
-              language={match?.[1]}
-              PreTag="div"
-            />
+            <SyntaxHighlighter {...rest} style={a11yDark} language={match?.[1]} PreTag="div">
+              {String(children).replace(/\n$/, '')}
+            </SyntaxHighlighter>
           ) : (
             <code {...rest} className={className}>
               {children}
