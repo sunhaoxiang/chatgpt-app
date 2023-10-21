@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { FiSend } from 'react-icons/fi'
 import { MdRefresh } from 'react-icons/md'
-import { PiLightningFill } from 'react-icons/pi'
+import { PiLightningFill, PiStopBold } from 'react-icons/pi'
 import TextareaAutoSize from 'react-textarea-autosize'
 import { v4 as uuidV4 } from 'uuid'
 
@@ -13,7 +13,7 @@ import { Message, MessageRequestBody } from '@/types/chat'
 export default function ChatInput() {
   const [messageText, setMessageText] = useState('')
   const {
-    state: { messageList, currentModel },
+    state: { messageList, currentModel, streamingId },
     dispatch
   } = useAppContext()
 
@@ -66,9 +66,16 @@ export default function ChatInput() {
   return (
     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-b from-[rgba(255,255,255,0)] from-[13.94%] to-[#fff] to-[54.73%] pt-10 dark:from-[rgba(53,55,64,0)] dark:to-[#353740] dark:to-[58.85%]">
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center space-y-4 px-4">
-        <Button className="font-medium" icon={MdRefresh} variant="primary">
-          重新生成
-        </Button>
+        {messageList.length !== 0 &&
+          (streamingId !== '' ? (
+            <Button className="font-medium" icon={PiStopBold} variant="primary">
+              停止生成
+            </Button>
+          ) : (
+            <Button className="font-medium" icon={MdRefresh} variant="primary">
+              重新生成
+            </Button>
+          ))}
         <div className="flex w-full items-end rounded-lg border border-black/10 bg-white py-4 shadow-[0_0_15px_rgba(0,0,0,0.1)] dark:border-gray-800/50 dark:bg-gray-700">
           <div className="mx-3 mb-2.5">
             <PiLightningFill />
@@ -84,6 +91,7 @@ export default function ChatInput() {
             className="mx-3 !rounded-lg"
             icon={FiSend}
             variant="primary"
+            disabled={messageText.trim() === '' || streamingId !== ''}
             onClick={() => send()}
           />
         </div>
