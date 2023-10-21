@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { FiSend } from 'react-icons/fi'
 import { MdRefresh } from 'react-icons/md'
 import { PiLightningFill, PiStopBold } from 'react-icons/pi'
@@ -12,6 +12,7 @@ import { Message, MessageRequestBody } from '@/types/chat'
 
 export default function ChatInput() {
   const [messageText, setMessageText] = useState('')
+  const stopRef = useRef(false)
   const {
     state: { messageList, currentModel, streamingId },
     dispatch
@@ -27,11 +28,14 @@ export default function ChatInput() {
     const body: MessageRequestBody = { messages, model: currentModel }
     dispatch({ type: ActionType.ADD_MESSAGE, message })
     setMessageText('')
+
+    const controller = new AbortController()
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
+      signal: controller.signal,
       body: JSON.stringify(body)
     })
     if (!response.ok) {
@@ -54,6 +58,11 @@ export default function ChatInput() {
     let done = false
     let content = ''
     while (!done) {
+      if (stopRef.current) {
+        stopRef.current = false
+        controller.abort()
+        break
+      }
       const result = await reader.read()
       done = result.done
       const chunk = decoder.decode(result.value)
@@ -68,7 +77,14 @@ export default function ChatInput() {
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center space-y-4 px-4">
         {messageList.length !== 0 &&
           (streamingId !== '' ? (
-            <Button className="font-medium" icon={PiStopBold} variant="primary">
+            <Button
+              className="font-medium"
+              icon={PiStopBold}
+              variant="primary"
+              onClick={() => {
+                stopRef.current = true
+              }}
+            >
               停止生成
             </Button>
           ) : (
