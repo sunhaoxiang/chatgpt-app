@@ -48,6 +48,7 @@ export default function ChatInput() {
       content: ''
     }
     dispatch({ type: ActionType.ADD_MESSAGE, message: responseMessage })
+    dispatch({ type: ActionType.UPDATE, field: 'streamingId', value: responseMessage.id })
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
     let done = false
@@ -59,6 +60,7 @@ export default function ChatInput() {
       content += chunk
       dispatch({ type: ActionType.UPDATE_MESSAGE, message: { ...responseMessage, content } })
     }
+    dispatch({ type: ActionType.UPDATE, field: 'streamingId', value: '' })
   }
 
   return (

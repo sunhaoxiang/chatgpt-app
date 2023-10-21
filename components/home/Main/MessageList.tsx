@@ -5,7 +5,7 @@ import Markdown from '@/components/common/Markdown'
 
 export default function MessageList() {
   const {
-    state: { messageList }
+    state: { messageList, streamingId }
   } = useAppContext()
 
   return (
@@ -21,7 +21,9 @@ export default function MessageList() {
               <div className="mx-auto flex w-full max-w-4xl space-x-6 px-4 py-6 text-lg">
                 <div className="text-3xl leading-[1]">{isUser ? '😊' : <SiOpenai />}</div>
                 <div className="flex-1">
-                  <Markdown>{message.content}</Markdown>
+                  <Markdown>
+                    {`${message.content}${message.id === streamingId ? '▍' : ''}`}
+                  </Markdown>
                 </div>
               </div>
             </li>
