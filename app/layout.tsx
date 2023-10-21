@@ -3,7 +3,8 @@ import type { ReactNode } from 'react'
 
 import AppContextProvider from '@/components/AppContext'
 
-import './globals.css'
+import '@/styles/globals.css'
+import '@/styles/markdown.css'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
