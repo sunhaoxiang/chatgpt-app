@@ -25,8 +25,24 @@ export default function ChatInput() {
       content: messageText
     }
     const messages = [...messageList, message]
-    const body: MessageRequestBody = { messages, model: currentModel }
     dispatch({ type: ActionType.ADD_MESSAGE, message })
+    doSend(messages)
+  }
+
+  async function resend() {
+    const messages = [...messageList]
+    if (messages.length !== 0 && messages[messages.length - 1].role === 'assistant') {
+      dispatch({
+        type: ActionType.REMOVE_MESSAGE,
+        message: messages[messages.length - 1]
+      })
+      messages.splice(messages.length - 1, 1)
+    }
+    doSend(messages)
+  }
+
+  async function doSend(messages: Message[]) {
+    const body: MessageRequestBody = { messages, model: currentModel }
     setMessageText('')
 
     const controller = new AbortController()
@@ -88,7 +104,14 @@ export default function ChatInput() {
               停止生成
             </Button>
           ) : (
-            <Button className="font-medium" icon={MdRefresh} variant="primary">
+            <Button
+              className="font-medium"
+              icon={MdRefresh}
+              variant="primary"
+              onClick={() => {
+                resend()
+              }}
+            >
               重新生成
             </Button>
           ))}
