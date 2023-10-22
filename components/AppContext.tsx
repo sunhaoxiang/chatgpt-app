@@ -1,7 +1,7 @@
 'use client'
 
 import type { Dispatch, ReactNode } from 'react'
-import { createContext, useContext, useMemo, useReducer, useState } from 'react'
+import { createContext, useContext, useMemo, useReducer } from 'react'
 
 import { Action, initState, reducer, State } from '@/reducers/AppReducer'
 

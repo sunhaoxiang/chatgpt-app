@@ -1,12 +1,34 @@
+import { useEffect } from 'react'
 import { SiOpenai } from 'react-icons/si'
 
 import { useAppContext } from '@/components/AppContext'
 import Markdown from '@/components/common/Markdown'
+import { ActionType } from '@/reducers/AppReducer'
 
 export default function MessageList() {
   const {
-    state: { messageList, streamingId }
+    state: { messageList, streamingId, selectedChat },
+    dispatch
   } = useAppContext()
+
+  async function getData(chatId: string) {
+    const response = await fetch(`/api/message/list?chatId=${chatId}`, {
+      method: 'GET'
+    })
+    if (!response.ok) {
+      console.log(response.statusText)
+    }
+    const { data } = await response.json()
+    dispatch({ type: ActionType.UPDATE, field: 'messageList', value: data.list })
+  }
+
+  useEffect(() => {
+    if (selectedChat) {
+      getData(selectedChat.id)
+    } else {
+      dispatch({ type: ActionType.UPDATE, field: 'messageList', value: [] })
+    }
+  }, [selectedChat])
 
   return (
     <div className="w-full pb-48 pt-10 dark:text-gray-300">

@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { groupByDate } from '@/common/util'
+import { useAppContext } from '@/components/AppContext'
 import { EventListener, useEventBusContext } from '@/components/EventBusContext'
+import { ActionType } from '@/reducers/AppReducer'
 import { Chat } from '@/types/chat'
 
 import ChatItem from './ChatItem'
@@ -11,7 +13,10 @@ export default function ChatList() {
 
   const pageRef = useRef(1)
 
-  const [selectedChat, setSelectedChat] = useState<Chat>()
+  const {
+    state: { selectedChat },
+    dispatch
+  } = useAppContext()
 
   const groupList = useMemo(() => {
     return groupByDate(chatList)
@@ -62,7 +67,9 @@ export default function ChatList() {
                     key={item.id}
                     item={item}
                     selected={selected}
-                    onSelected={chat => setSelectedChat(chat)}
+                    onSelected={chat =>
+                      dispatch({ type: ActionType.UPDATE, field: 'selectedChat', value: chat })
+                    }
                   />
                 )
               })}
