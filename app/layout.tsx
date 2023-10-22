@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
 import AppContextProvider from '@/components/AppContext'
+import EventBusContextProvider from '@/components/EventBusContext'
 
 import '@/styles/globals.css'
 import '@/styles/markdown.css'
@@ -15,7 +16,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <AppContextProvider>{children}</AppContextProvider>
+        <AppContextProvider>
+          <EventBusContextProvider>{children}</EventBusContextProvider>
+        </AppContextProvider>
       </body>
     </html>
   )
