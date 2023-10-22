@@ -3,9 +3,9 @@ import { FiSend } from 'react-icons/fi'
 import { MdRefresh } from 'react-icons/md'
 import { PiLightningFill, PiStopBold } from 'react-icons/pi'
 import TextareaAutoSize from 'react-textarea-autosize'
-import { v4 as uuidV4 } from 'uuid'
 
 import { useAppContext } from '@/components/AppContext'
+import { useEventBusContext } from '@/components/EventBusContext'
 import Button from '@/components/common/Button'
 import { ActionType } from '@/reducers/AppReducer'
 import { Message, MessageRequestBody } from '@/types/chat'
@@ -13,17 +13,55 @@ import { Message, MessageRequestBody } from '@/types/chat'
 export default function ChatInput() {
   const [messageText, setMessageText] = useState('')
   const stopRef = useRef(false)
+  const chatIdRef = useRef('')
   const {
     state: { messageList, currentModel, streamingId },
     dispatch
   } = useAppContext()
+  const { publish } = useEventBusContext()
+
+  async function createOrUpdateMessage(message: Message) {
+    const response = await fetch('/api/message/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(message)
+    })
+    if (!response.ok) {
+      console.log(response.statusText)
+      return
+    }
+    const { data } = await response.json()
+    if (!chatIdRef.current) {
+      chatIdRef.current = data.message.chatId
+      publish('fetchChatList')
+    }
+    return data.message
+  }
+
+  async function deleteMessage(id: string) {
+    const response = await fetch(`/api/message/delete?id=${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if (!response.ok) {
+      console.log(response.statusText)
+      return
+    }
+    const { code } = await response.json()
+    return code === 0
+  }
 
   async function send() {
-    const message: Message = {
-      id: uuidV4(),
+    const message = await createOrUpdateMessage({
+      id: '',
       role: 'user',
-      content: messageText
-    }
+      content: messageText,
+      chatId: chatIdRef.current
+    })
     const messages = [...messageList, message]
     dispatch({ type: ActionType.ADD_MESSAGE, message })
     doSend(messages)
@@ -32,6 +70,11 @@ export default function ChatInput() {
   async function resend() {
     const messages = [...messageList]
     if (messages.length !== 0 && messages[messages.length - 1].role === 'assistant') {
+      const result = await deleteMessage(messages[messages.length - 1].id)
+      if (result) {
+        console.log('delete error')
+        return
+      }
       dispatch({
         type: ActionType.REMOVE_MESSAGE,
         message: messages[messages.length - 1]
@@ -62,11 +105,12 @@ export default function ChatInput() {
       console.log('body error')
       return
     }
-    const responseMessage: Message = {
-      id: uuidV4(),
+    const responseMessage = await createOrUpdateMessage({
+      id: '',
       role: 'assistant',
-      content: ''
-    }
+      content: '',
+      chatId: chatIdRef.current
+    })
     dispatch({ type: ActionType.ADD_MESSAGE, message: responseMessage })
     dispatch({ type: ActionType.UPDATE, field: 'streamingId', value: responseMessage.id })
     const reader = response.body.getReader()
@@ -85,6 +129,7 @@ export default function ChatInput() {
       content += chunk
       dispatch({ type: ActionType.UPDATE_MESSAGE, message: { ...responseMessage, content } })
     }
+    createOrUpdateMessage({ ...responseMessage, content })
     dispatch({ type: ActionType.UPDATE, field: 'streamingId', value: '' })
   }
 
