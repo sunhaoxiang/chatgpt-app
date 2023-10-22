@@ -10,7 +10,18 @@ export default function Index() {
 
   return (
     <div className="flex space-x-3">
-      <Button icon={HiPlus} variant="outline" className="flex-1">
+      <Button
+        icon={HiPlus}
+        variant="outline"
+        className="flex-1"
+        onClick={() => {
+          dispatch({
+            type: ActionType.UPDATE,
+            field: 'selectedChat',
+            value: null
+          })
+        }}
+      >
         新建对话
       </Button>
       <Button
