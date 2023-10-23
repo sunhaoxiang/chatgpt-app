@@ -40,7 +40,6 @@ export default function ChatList() {
       console.log(response.statusText)
       loadingRef.current = false
     }
-    pageRef.current++
     const { data } = await response.json()
     hasMoreRef.current = data.hasMore
     if (pageRef.current === 1) {
@@ -48,6 +47,7 @@ export default function ChatList() {
     } else {
       setChatList(list => [...list, ...data.list])
     }
+    pageRef.current++
     loadingRef.current = false
   }
 
