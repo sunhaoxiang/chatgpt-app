@@ -3,6 +3,7 @@ import { AiOutlineEdit } from 'react-icons/ai'
 import { MdCheck, MdClose, MdDeleteOutline } from 'react-icons/md'
 import { PiChatBold, PiTrashBold } from 'react-icons/pi'
 
+import { useEventBusContext } from '@/components/EventBusContext'
 import { Chat } from '@/types/chat'
 
 type Props = {
@@ -12,13 +13,50 @@ type Props = {
 }
 
 export default function ChatItem({ item, selected, onSelected }: Props) {
+  const { publish } = useEventBusContext()
   const [editing, setEditing] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [title, setTitle] = useState(item.title)
 
   useEffect(() => {
     setEditing(false)
     setDeleting(false)
   }, [selected])
+
+  async function updateChat() {
+    const response = await fetch('/api/chat/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id: item.id, title })
+    })
+    if (!response.ok) {
+      console.log(response.statusText)
+      return
+    }
+    const { code } = await response.json()
+    if (code === 0) {
+      publish('fetchChatList')
+    }
+  }
+
+  async function deleteChat() {
+    const response = await fetch(`/api/chat/delete?id=${item.id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if (!response.ok) {
+      console.log(response.statusText)
+      return
+    }
+    const { code } = await response.json()
+    if (code === 0) {
+      publish('fetchChatList')
+    }
+  }
 
   return (
     <li
@@ -33,8 +71,11 @@ export default function ChatItem({ item, selected, onSelected }: Props) {
       {editing ? (
         <input
           className="min-w-0 flex-1 bg-transparent outline-none"
-          defaultValue={item.title}
+          value={title}
           autoFocus={true}
+          onChange={e => {
+            setTitle(e.target.value)
+          }}
         />
       ) : (
         <div className="relative flex-1 overflow-hidden whitespace-nowrap">
@@ -56,9 +97,9 @@ export default function ChatItem({ item, selected, onSelected }: Props) {
                 onClick={(e: MouseEvent) => {
                   e.preventDefault()
                   if (deleting) {
-                    console.log('deleted')
+                    deleteChat()
                   } else {
-                    console.log('edited')
+                    updateChat()
                   }
                   setEditing(false)
                   setDeleting(false)
