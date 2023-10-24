@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { FaCircleUser } from 'react-icons/fa6'
 import { SiOpenai } from 'react-icons/si'
 
 import { useAppContext } from '@/components/AppContext'
@@ -41,7 +42,9 @@ export default function MessageList() {
               className={`${isUser ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-700'}`}
             >
               <div className="mx-auto flex w-full max-w-4xl space-x-6 px-4 py-6 text-lg">
-                <div className="text-3xl leading-[1]">{isUser ? '😊' : <SiOpenai />}</div>
+                <div className="text-3xl leading-[1]">
+                  {isUser ? <FaCircleUser /> : <SiOpenai />}
+                </div>
                 <div className="flex-1">
                   <Markdown>
                     {`${message.content}${message.id === streamingId ? '▍' : ''}`}
