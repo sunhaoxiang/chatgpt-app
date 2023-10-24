@@ -3,7 +3,9 @@ import { AiOutlineEdit } from 'react-icons/ai'
 import { MdCheck, MdClose, MdDeleteOutline } from 'react-icons/md'
 import { PiChatBold, PiTrashBold } from 'react-icons/pi'
 
+import { useAppContext } from '@/components/AppContext'
 import { useEventBusContext } from '@/components/EventBusContext'
+import { ActionType } from '@/reducers/AppReducer'
 import { Chat } from '@/types/chat'
 
 type Props = {
@@ -13,6 +15,7 @@ type Props = {
 }
 
 export default function ChatItem({ item, selected, onSelected }: Props) {
+  const { dispatch } = useAppContext()
   const { publish } = useEventBusContext()
   const [editing, setEditing] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -55,6 +58,11 @@ export default function ChatItem({ item, selected, onSelected }: Props) {
     const { code } = await response.json()
     if (code === 0) {
       publish('fetchChatList')
+      dispatch({
+        type: ActionType.UPDATE,
+        field: 'selectedChat',
+        value: null
+      })
     }
   }
 
