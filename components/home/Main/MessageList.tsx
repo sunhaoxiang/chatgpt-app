@@ -29,6 +29,7 @@ export default function MessageList() {
     } else {
       dispatch({ type: ActionType.UPDATE, field: 'messageList', value: [] })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChat])
 
   return (

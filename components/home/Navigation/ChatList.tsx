@@ -62,6 +62,7 @@ export default function ChatList() {
     }
     subscribe('fetchChatList', callback)
     return () => unsubscribe('fetchChatList', callback)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
