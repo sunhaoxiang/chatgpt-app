@@ -3,7 +3,6 @@ import type { ReactNode } from 'react'
 
 import AppContextProvider from '@/components/AppContext'
 import EventBusContextProvider from '@/components/EventBusContext'
-
 import '@/styles/globals.css'
 import '@/styles/markdown.css'
 
@@ -15,6 +14,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <title>ChatGPT</title>
+        <link rel="icon" href="/icons/favicon.png" type="image/png" sizes="32x32" />
+      </head>
       <body>
         <AppContextProvider>
           <EventBusContextProvider>{children}</EventBusContextProvider>
